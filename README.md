@@ -54,23 +54,23 @@ $ aws configure
 
 Y poner los valores de cada campo abajo. 
 
-~/.aws/credentials 
+  ~/.aws/credentials 
 
-[default] 
+  [default] 
 
-aws_access_key_id = AKIAJTBI6ERJXLNZ7CLQ 
+  aws_access_key_id = AKIAJTBI6ERJXLNZ7CLQ 
 
-aws_secret_access_key = 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 
+  aws_secret_access_key = xmJ+ZyaDyPbUyG4zDouzvtYWbHM6DBr94cnxWxGD 
 
  
 
 ~/.aws/config 
 
-[default] 
+  [default] 
 
-region = us-west-2 (actualmente cambiado a eu-west-1) 
+  region = us-west-2 (actualmente cambiado a eu-west-1) 
 
-output = text 
+  output = text 
 
  
 
@@ -82,9 +82,7 @@ Amazon S3
 
 mi bucket creado:  
 
-leogamboa-bucket  us-west-2 
-
-leogamboa-bucket2 eu-west-1 
+  leogamboa-bucket2 eu-west-1 
 
  
 
@@ -92,9 +90,9 @@ AIM Management Console
 
 Usuario01, usuario02, clave: Superleo01.  
 
-aws_access_key_id = AKIAJTBI6ERJXLNZ7CLQ 
+   aws_access_key_id = AKIAJTBI6ERJXLNZ7CLQ 
 
-aws_secret_access_key = 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 
+   aws_secret_access_key = xmJ+ZyaDyPbUyG4zDouzvtYWbHM6DBr94cnxWxGD 
 
  
 
