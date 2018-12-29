@@ -32,18 +32,18 @@ https://etcher.io/
 
      (https://docs.aws.amazon.com/es_es/cli/latest/userguide/awscli-install-linux.html#awscli-install-linux-path ) 
 
-    Nano .profile    (bajo la ruta usuario) 
+         nano .profile    (bajo la ruta usuario) 
 
-    ubuntu@ip-172-31-25-169:~$ pwd 
+         ubuntu@ip-172-31-25-169:~$ pwd 
 
-    /home/ubuntu 
- 
+         /home/ubuntu  (o /home/pi para RaspBerry)
+
 
     Ahora AWS SDK Python BOTO 
 
     https://aws.amazon.com/es/sdk-for-python/ 
-
- 
+     
+         pip3 install boto3
 
 
 Ficheros Credenciales y config de AWS CLI (respecto al usuario creado en IAM) y son las actuales credenciales que utilizo.  
