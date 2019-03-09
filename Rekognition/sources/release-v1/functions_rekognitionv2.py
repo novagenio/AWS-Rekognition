@@ -35,6 +35,11 @@ def DetectFaces(photo):  # https://docs.aws.amazon.com/es_es/rekognition/latest/
     bucket='leogamboa-bucket2'
     client=boto3.client('rekognition')
 
+    #imageFile='input.jpg'
+    #with open(imageFile, 'rb') as image:
+    #    response = client.detect_labels(Image={'Bytes': image.read()})
+
+
     response = client.detect_faces(Image={'S3Object':{'Bucket':bucket,'Name':photo}},Attributes=['ALL'])
 
     print("Entro en Funcion FaceDetail")
@@ -76,8 +81,8 @@ def DetectFaces(photo):  # https://docs.aws.amazon.com/es_es/rekognition/latest/
 
   
 
-        frase = "Hola veo que eres " + sexo + "de entre " + str(faceDetail['AgeRange']['Low']) + " y " + str(faceDetail['AgeRange']['High']) + " de edad, "
-        frase = frase + "ademas veo que tu expresion es de " + emosion + " " + boca + " " + sonrisa + " " + ojos + " " + gafas + " " 
+        frase = "   Hola,  veo que eres " + sexo + "de entre " + str(faceDetail['AgeRange']['Low']) + " y " + str(faceDetail['AgeRange']['High']) + " de edad, "
+        frase = frase + ", ademas veo que tu expresion es de " + emosion + ", " + boca + ", " + sonrisa + ", " + ojos + ", " + gafas + " " 
 
         #print (frase)
     return frase
@@ -86,6 +91,7 @@ def DetectFaces(photo):  # https://docs.aws.amazon.com/es_es/rekognition/latest/
 def BuscaEnBd(face_id):  # recive como parametro un  FaceId y los busca en la base de datos y despliega los datos
               dynamodb = boto3.resource("dynamodb", region_name='eu-west-1')
               table = dynamodb.Table('rekognition')
+              nombre = "Desconocido o no encontro ningun rostro en la base de datos  .."
               print("GetItem succeeded:")
               try:
                      response = table.query(KeyConditionExpression=Key('FaceId').eq(face_id))
@@ -104,32 +110,35 @@ def BuscaEnBd(face_id):  # recive como parametro un  FaceId y los busca en la ba
 def SearchFacesByImage(fileName):          # https://docs.aws.amazon.com/es_es/rekognition/latest/dg/search-face-with-image-procedure.html
     threshold = 70
     maxFaces=2
-    s3 = boto3.resource('s3')
-    bucket = s3.Bucket('leogamboa-bucket2')
+#    s3 = boto3.resource('s3')
+ #   bucket = s3.Bucket('leogamboa-bucket2')
     bucket='leogamboa-bucket2'
     collectionId='MyCollection'
-
+    face_id=0
+    porcentaje=0
     client=boto3.client('rekognition')
-    response=client.search_faces_by_image(CollectionId=collectionId,
+    try:
+	    response=client.search_faces_by_image(CollectionId=collectionId,
                                Image={'S3Object':{'Bucket':bucket,'Name':fileName}},
                                FaceMatchThreshold=threshold,
                                MaxFaces=maxFaces)
-
-    faceMatches=response['FaceMatches']
-    print("Inicio funcion faceMatch")
-    nombre ="no encontrado"
-    for match in faceMatches:
-        face_id=match['Face']['FaceId']
-        print ('face_id:' + face_id + "/")
-        print ('FaceId:' + match['Face']['FaceId'])
-        print ('ImageId:' + match['Face']['ImageId'])
-        print ('ExternalImageId:' + match['Face']['ExternalImageId'])
-        print ('Similarity: ' + "{:.2f}".format(match['Similarity']) + "%")
-        print("Fin Función FaceMatch, retorna face_id: " + face_id )
-        nombre=BuscaEnBd(face_id) # despliega los datos del rostro, encontrado.
-        print("El nombre encintrado es: " + nombre)
-        return nombre
-
+    except ClientError as e:
+            print(e.response['Error']['Message'])
+    else:
+            faceMatches=response['FaceMatches']
+            print("Inicio funcion faceMatch")
+            for match in faceMatches:
+                face_id=match['Face']['FaceId']
+                print ('face_id:' + face_id + "/")
+                print ('FaceId:' + match['Face']['FaceId'])
+                print ('ImageId:' + match['Face']['ImageId'])
+                print ('ExternalImageId:' + match['Face']['ExternalImageId'])
+                porcentaje="{:.2f}".format(match['Similarity'])
+                print(porcentaje)
+                print ('Similarity: ' + "{:.2f}".format(match['Similarity']) + "%")
+                print("Fin Función FaceMatch, retorna face_id: " + face_id )	
+    return face_id, porcentaje
+		
 #----------------------------------------------------------------------
 def upload_file_s3(origen, destino): # recive como arametro la ruta y fichero origen y nombre  con que se quedara en el S3
     s3 = boto3.resource('s3')
